@@ -1,0 +1,39 @@
+import 'package:go_router/go_router.dart';
+
+import '../../features/auth/presentations/login_screen.dart';
+import '../../features/camera/presentations/camera_screen.dart';
+import '../../features/students/presentations/students_list_screen.dart';
+import '../../features/task/presentations/tasks_list_screen.dart';
+import '../../features/courses/presentations/courses_list_screen.dart';
+
+final GoRouter router = GoRouter(
+  initialLocation: '/login',
+  routes: [
+    GoRoute(path: '/', redirect: (context, state) => "/courses"),
+    GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
+    GoRoute(
+      path: '/courses/:courseId/tasks/:taskId/camera',
+      builder: (context, state) {
+        final courseId = state.pathParameters['courseId']!; // Получаем ID
+        final taskId = state.pathParameters['taskId']!; // Получаем ID
+        return CameraScreen(courseId: courseId, taskId: taskId);
+      },
+    ),
+    GoRoute(path: '/courses', builder: (context, state) => CoursesListScreen()),
+    GoRoute(
+      path: '/courses/:courseId',
+      builder: (context, state) {
+        final courseId = state.pathParameters['courseId']!; // Получаем ID
+        return TasksListScreen(courseId: courseId);
+      },
+    ),
+    GoRoute(
+      path: '/courses/:course_id/tasks/:task_id',
+      builder: (context, state) {
+        final courseId = state.pathParameters['course_id']!; // Получаем ID
+        final taskId = state.pathParameters['task_id']!; // Получаем ID
+        return StudentsListScreen(task_id: taskId, course_id: courseId);
+      },
+    ),
+  ],
+);
