@@ -9,11 +9,12 @@ Future<List<Student>> get_students(String course_id, String task_id) async {
   try {
     var options = await getTokenOptions();
     final response = await dio.get(
-      '$SERVER_URL/api/canvas-courses/v1/$course_id/assignments/$task_id',
+      '/api/canvas-courses/v1/$course_id/assignments/$task_id',
       options: options,
     );
     if (response.statusCode == 200) {
       final data = response.data;
+      print(data);
       List<Student> items = [];
       for (var item in data) {
         items.add(Student.fromJson(item));

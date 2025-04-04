@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+import 'dio.dart';
 
 const CSRF_TOKEN = '_csrf_token';
 const LEGACY_SESSION = '_legacy_normandy_session';
@@ -9,7 +9,8 @@ const AUTH_TIME = 24;
 
 const CURRENT_USER = 'currentUser';
 
-const SERVER_URL = 'http://185.47.167.43';
+const SERVER_URL = 'http://records.narxoz.kz/';
+const SERVER_IP = 'http://185.47.167.43/';
 
-final dio = Dio();
+final dio = DioClient.createDio();
 

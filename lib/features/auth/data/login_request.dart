@@ -15,7 +15,7 @@ import '../domain/user_class.dart';
 Future<User?> login(BuildContext context, username, password) async {
   try {
     final response = await dio.post(
-      '$SERVER_URL/api/auth/v1/signin',
+      '/api/auth/v1/signin',
       data: {'username': username, 'password': password},
     );
 
@@ -32,7 +32,7 @@ Future<User?> login(BuildContext context, username, password) async {
         sharedPrefs.set(name, token);
       }
       var user = User(
-        id: data['canvas_user']['canvas_id'],
+        id: data['canvas_user']['id'],
         username: username,
         password: password,
         canvas_web_id: data['canvas_user']['web_id'],

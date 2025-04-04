@@ -1,0 +1,30 @@
+{
+  "@@locale": "ru",
+  "next_locale": "en",
+  "login_title": "Вход",
+  "login_email_placeholder": "Введите email пользователя",
+  "login_email_validator_empty": "Пожалуйста, введите имя пользователя",
+  "login_email_validator_wrong": "Используйте корректный email",
+  "login_password_placeholder": "Введите пароль",
+  "login_password_validator_empty": "Пожалуйста, введите пароль",
+  "login_button_text": "Войти",
+  "login_success_bar": "Вход выполнен успешно",
+  "login_fail_bar": "Ошибка входа",
+
+  "courses_title": "Курсы",
+  "courses_more_button": "Больше курсов",
+  "courses_empty": "Нет курсов",
+  "courses_loading_error": "Ошибка загрузки курсов",
+
+  "tasks_more_button": "Больше заданий",
+  "tasks_empty": "Нет заданий",
+  "tasks_loading_error": "Ошибка загрузки заданий",
+
+  "students_reload_page": "Перезагрузить страницу",
+  "students_empty": "Нет студентов",
+  "students_loading_error": "Ошибка загрузки студентов",
+  "students_attend": "Присутствует",
+  "students_not_attend": "Отсутствует",
+  "students_excuse": "Отсутствие по уважительной причине",
+  "students_send_attendance": "Отправить посещаемость"
+}

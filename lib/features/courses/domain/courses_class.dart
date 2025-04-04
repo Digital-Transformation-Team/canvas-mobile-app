@@ -8,7 +8,7 @@ class Course {
   Course({required this.id, required this.name, required this.course_code, required this.web_id, required this.description});
 
   static Course fromJson(Map<String, dynamic> json) => Course(
-    id: json['course_id'],
+    id: json['id'],
     name: json['short_name'],
     course_code: json['course_code'],
     web_id: json['web_id'],

@@ -8,7 +8,7 @@ Future<(String, List<Task>)> get_tasks(var course_id) async {
   try {
     var options = await getTokenOptions();
     String url =
-        '$SERVER_URL/api/canvas-courses/v1/$course_id/attendance-assignment-group';
+        '/api/canvas-courses/v1/$course_id/attendance-assignment-group';
     final response = await dio.get(url, options: options);
     if (response.statusCode == 200) {
       final data = response.data;

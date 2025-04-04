@@ -5,13 +5,17 @@ import '../../../core/shared_prefs.dart';
 import '../../auth/data/login_request.dart';
 import '../domain/courses_class.dart';
 
+Future<String> getTokens() async {
+  return '$CSRF_TOKEN=${await sharedPrefs.get(CSRF_TOKEN)}; '
+      '$SESSIONID=${await sharedPrefs.get(SESSIONID)}; '
+      '$LEGACY_SESSION=${await sharedPrefs.get(LEGACY_SESSION)}; '
+      '$NORMANDY_SESSION=${await sharedPrefs.get(NORMANDY_SESSION)}';
+}
+
 Future<Options> getTokenOptions() async {
   return Options(
     headers: {
-      'Cookie': '$CSRF_TOKEN=${await sharedPrefs.get(CSRF_TOKEN)}; '
-          '$SESSIONID=${await sharedPrefs.get(SESSIONID)}; '
-          '$LEGACY_SESSION=${await sharedPrefs.get(LEGACY_SESSION)}; '
-          '$NORMANDY_SESSION=${await sharedPrefs.get(NORMANDY_SESSION)}',
+      'Cookie': await getTokens(),
       'accept': 'application/json',
       'Content-Type': 'application/json'
     },
@@ -60,7 +64,7 @@ Future<List<Course>> get_courses() async {
     var options = await getTokenOptions();
     var user = await get_user();
     final response = await dio.get(
-      '$SERVER_URL/api/canvas-courses/v1/',
+      '/api/canvas-courses/v1/',
       queryParameters: {
         'canvas_user_id': user.id,
         'page': 1,
@@ -72,8 +76,9 @@ Future<List<Course>> get_courses() async {
     );
     if (response.statusCode == 200) {
       final data = response.data;
+      print(data);
       List<Course> items = [];
-      for (var item in data['items']){
+      for (var item in data['items']) {
         items.add(Course.fromJson(item));
       }
       return items;

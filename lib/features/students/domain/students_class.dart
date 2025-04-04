@@ -27,7 +27,7 @@ class Student {
   * */
 
   static Student fromJson(Map<String, dynamic> json) => Student(
-    id: json['student']['canvas_user_id'].toString(),
+    id: json['student']['id'].toString(),
     web_id: json['student']['web_id'].toString(),
     name: json['student']['name'].toString(),
     email: json['student']['email'].toString(),

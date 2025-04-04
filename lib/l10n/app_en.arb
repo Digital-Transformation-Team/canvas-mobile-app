@@ -1,0 +1,30 @@
+{
+  "@@locale": "en",
+  "next_locale": "ru",
+  "login_title": "Login",
+  "login_email_placeholder": "Enter your email",
+  "login_email_validator_empty": "Please enter your username",
+  "login_email_validator_wrong": "Use valid email",
+  "login_password_placeholder": "Enter your password",
+  "login_password_validator_empty": "Please enter your password",
+  "login_button_text": "Login",
+  "login_success_bar": "Login successful",
+  "login_fail_bar": "Login failed",
+
+  "courses_title": "Courses",
+  "courses_more_button": "More courses",
+  "courses_empty": "No courses",
+  "courses_loading_error": "Courses loading error",
+
+  "tasks_more_button": "More tasks",
+  "tasks_empty": "No tasks",
+  "tasks_loading_error": "Tasks loading error",
+
+  "students_reload_page": "Reload page",
+  "students_empty": "No students",
+  "students_loading_error": "Students loading error",
+  "students_attend": "Attend",
+  "students_not_attend": "Not attend",
+  "students_excuse": "Has reason to not attend",
+  "students_send_attendance": "Send attendance"
+}

@@ -4,7 +4,10 @@ import 'package:narxoz_face_id/core/overlays/loading_overlay.dart';
 import 'package:narxoz_face_id/features/task/data/create_new_task_request.dart';
 import 'package:narxoz_face_id/features/task/domain/tasks_class.dart';
 import 'package:narxoz_face_id/features/task/presentations/widgets/task_card_widget.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
+import '../../../core/LocaleProvider.dart';
 import '../../auth/data/login_request.dart';
 import '../data/get_tasks_request.dart';
 
@@ -35,10 +38,22 @@ class _TasksListScreenState extends State<TasksListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localeProvider = Provider.of<LocaleProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(name),
         actions: [
+          TextButton(
+            onPressed: () {
+              if (localeProvider.locale.languageCode == 'en') {
+                localeProvider.setLocale(Locale('ru'));
+              } else {
+                localeProvider.setLocale(Locale('en'));
+              }
+            },
+            child: Text(AppLocalizations.of(context)!.localeName),
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () async {
@@ -58,7 +73,7 @@ class _TasksListScreenState extends State<TasksListScreen> {
                   tasksFuture = get_tasks(widget.courseId);
                 });
               },
-              title: Text("More tasks"),
+              title: Text(AppLocalizations.of(context)!.tasks_more_button),
               leading: Icon(Icons.cloud_download),
             ),
             FutureBuilder(
@@ -67,15 +82,15 @@ class _TasksListScreenState extends State<TasksListScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text("Ошибка загрузки данных"));
+                  return Center(child: Text(AppLocalizations.of(context)!.tasks_loading_error));
                 } else if (!snapshot.hasData) {
-                  return Center(child: Text("Нет тасков"));
+                  return Center(child: Text(AppLocalizations.of(context)!.tasks_empty));
                 }
 
                 final (name, tasks) = snapshot.data!;
 
                 if (tasks.isEmpty) {
-                  return Center(child: Text("Нет тасков"));
+                  return Center(child: Text(AppLocalizations.of(context)!.tasks_empty));
                 }
 
                 return Expanded(
