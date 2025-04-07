@@ -50,9 +50,9 @@ Future<User?> login(BuildContext context, username, password) async {
 }
 
 Future<User> get_user() async {
-  var current_user_str = await sharedPrefs.get(CURRENT_USER);
-  var user_json = json.decode(current_user_str!);
-  User user = User.fromJson(user_json);
+  var currentUserStr = await sharedPrefs.get(CURRENT_USER);
+  var userJson = json.decode(currentUserStr!);
+  User user = User.fromJson(userJson);
   return user;
 }
 

@@ -1,11 +1,13 @@
 class Task {
   late int id;
   late String name;
+  late String web_id;
 
-  Task({required this.id, required this.name});
+  Task({required this.id, required this.name, required this.web_id});
 
   static Task fromJson(Map<String, dynamic> json) => Task(
-    id: json['assignment_id'],
+    id: json['canvas_assignment_id'],
     name: json['name'],
+    web_id: json['web_id'],
   );
 }

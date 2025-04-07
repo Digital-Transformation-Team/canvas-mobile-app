@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../data/change_status_request.dart';
 import '../../domain/students_class.dart';
 
 class StudentCardWidget extends StatefulWidget {

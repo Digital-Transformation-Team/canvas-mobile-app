@@ -1,8 +1,5 @@
-import 'package:narxoz_face_id/features/students/data/get_students_request.dart';
-
 import '../../../core/consts.dart';
 import '../../courses/data/get_courses_request.dart';
-import '../domain/students_class.dart';
 
 // Future<List<String>> getClasses() async {
 //   try {
@@ -21,27 +18,27 @@ import '../domain/students_class.dart';
 //   }
 // }
 
-Future<List<Student>> change_status(
-  String course_id,
-  String task_id,
-  String student_id,
-  int students_index,
+Future<void> change_status(
+  String web_id,
+  String asignment_web_id,
   String value,
 ) async {
   try {
+    String url = '/api/attendances/v1/$asignment_web_id';
+    print(url);
     var options = await getTokenOptions();
     final response = await dio.put(
-      '/api/canvas-courses/v1/$course_id/assignments/$task_id',
+      url,
       options: options,
-      data: {'student_id': student_id, 'value': value},
+      data: {'value': value},
     );
     if (response.statusCode == 200) {
-      return await get_students(course_id, task_id);
+      return;
     } else {
       throw Exception("Ошибка загрузки");
     }
   } catch (e) {
     print("Ошибка: $e");
-    return [];
+    return;
   }
 }

@@ -4,17 +4,15 @@ import '../../../core/consts.dart';
 import '../../courses/data/get_courses_request.dart';
 import '../domain/tasks_class.dart';
 
-Future<Task> create_task(var course_id) async {
+Future<Task> create_task(var courseId) async {
   try {
     var options = await getTokenOptions();
-    String url = '/api/canvas-courses/v1/$course_id/assignments';
-    String? groupId = await sharedPrefs.get('groupId');
+    String? assignment_group_web_id = await sharedPrefs.get("assignment_group_web_id");
+    String url = '/api/canvas-courses/v1/$courseId/assignment-groups/$assignment_group_web_id/assignments';
+    print(url);
     final response = await dio.post(
       url,
       options: options,
-      data:{
-        'assignment_group_id': int.parse(groupId!)
-      }
     ).catchError((e) {
       if (e.response != null) {
         print("Has response");
@@ -37,7 +35,7 @@ Future<Task> create_task(var course_id) async {
     }
   } catch (e) {
     print("Ошибка: $e");
-    Task task = new Task(id: 0, name: '');
+    Task task = Task(id: 0, name: '', web_id: '');
     return task;
   }
 }

@@ -1,15 +1,8 @@
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:narxoz_face_id/core/consts.dart';
-import 'package:narxoz_face_id/features/courses/data/get_courses_request.dart';
 
 import '../../students/domain/students_class.dart';
 
-Future<Student?> sendImage(image, task_id, course_id) async {
+Future<Student?> sendImage(image, taskId, courseId) async {
   // try {
   //   var response = dio.post(
   //     '/api/students/v1/search',

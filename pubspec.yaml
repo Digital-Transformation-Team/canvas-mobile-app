@@ -64,6 +64,8 @@ dependencies:
 
   provider: ^6.1.4
 
+  http_parser: any
+  http: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

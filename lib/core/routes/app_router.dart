@@ -28,11 +28,10 @@ final GoRouter router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/courses/:course_id/tasks/:task_id',
+      path: '/tasks/:web_id',
       builder: (context, state) {
-        final courseId = state.pathParameters['course_id']!; // Получаем ID
-        final taskId = state.pathParameters['task_id']!; // Получаем ID
-        return StudentsListScreen(task_id: taskId, course_id: courseId);
+        final webId = state.pathParameters['web_id']!; // Получаем ID
+        return StudentsListScreen(web_id: webId);
       },
     ),
   ],

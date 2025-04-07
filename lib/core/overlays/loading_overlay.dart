@@ -4,8 +4,9 @@ class LoadingOverlay {
   static OverlayEntry? _overlayEntry;
 
   static void show(BuildContext context) {
-    if (_overlayEntry != null)
+    if (_overlayEntry != null) {
       return; // Если уже отображается, не создаем новый
+    }
 
     _overlayEntry = OverlayEntry(
       builder:

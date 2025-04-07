@@ -11,13 +11,11 @@ import '../data/get_students_request.dart';
 import '../domain/students_class.dart';
 
 class StudentsListScreen extends StatefulWidget {
-  final String task_id;
-  final String course_id;
+  final String web_id;
 
   const StudentsListScreen({
     super.key,
-    required this.task_id,
-    required this.course_id,
+    required this.web_id,
   });
 
   @override
@@ -36,7 +34,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
   }
 
   Future<List<Student>> initStudents() async {
-    return get_students(widget.course_id, widget.task_id);
+    return get_students(widget.web_id);
   }
 
   void showStudentModalBottomSheet(student, index) {
@@ -140,10 +138,8 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                 onPressed: () async {
                   context.pop();
                   await change_status(
-                    widget.course_id,
-                    widget.task_id,
-                    student.id,
-                    index,
+                    widget.web_id,
+                    student.web_id_assignment,
                     selectedValue!,
                   );
                   onStatusChanged();

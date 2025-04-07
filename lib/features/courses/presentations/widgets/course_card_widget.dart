@@ -6,8 +6,7 @@ class CourseCardWidget extends StatelessWidget {
   final int index;
   final Course course;
 
-  const CourseCardWidget({Key? key, required this.course, required this.index})
-    : super(key: key);
+  const CourseCardWidget({super.key, required this.course, required this.index});
 
   @override
   Widget build(BuildContext context) {

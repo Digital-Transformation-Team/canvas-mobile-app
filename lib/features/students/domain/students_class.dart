@@ -5,6 +5,7 @@ class Student {
   late String email;
   late String status;
   late String value;
+  late String web_id_assignment;
 
   Student({
     required this.id,
@@ -13,6 +14,7 @@ class Student {
     required this.email,
     required this.status,
     required this.value,
+    required this.web_id_assignment,
   });
 
   /* Statuses:
@@ -33,6 +35,7 @@ class Student {
     email: json['student']['email'].toString(),
     status: json['status'].toString(),
     value: json['value'].toString(),
+    web_id_assignment: json['web_id'].toString(),
   );
 
   Map<String, dynamic> toJson() => {

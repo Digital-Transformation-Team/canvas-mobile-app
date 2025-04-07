@@ -120,15 +120,7 @@ class _LoginScreenState extends State<LoginScreen>
                           AppLocalizations.of(context)!.login_email_placeholder,
                     ),
                     validator: (value) {
-                      var validEmail = RegExp(
-                        r"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$",
-                      );
-                      if (!validEmail.hasMatch(value!)) {
-                        return AppLocalizations.of(
-                          context,
-                        )!.login_email_validator_wrong;
-                      }
-                      if (value.isEmpty) {
+                      if (value!.isEmpty) {
                         return AppLocalizations.of(
                           context,
                         )!.login_email_validator_wrong;
