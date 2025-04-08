@@ -20,6 +20,7 @@ Future<(String, List<Task>)> get_tasks(var courseId) async {
       String name = data['name'];
       sharedPrefs.set('groupId', data['assignment_group_id'].toString());
       sharedPrefs.set('assignment_group_web_id', data['web_id']);
+      sharedPrefs.set('course_id', data['id'].toString());
       return (name, items);
     } else {
       throw Exception("Ошибка загрузки");

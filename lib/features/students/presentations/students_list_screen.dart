@@ -239,7 +239,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
       floatingActionButton: FloatingActionButton(
         disabledElevation: 1,
         onPressed: () async {
-          // context.push('/courses/${widget.course_id}/tasks/${widget.task_id}/camera');
+          context.push('/camera');
         },
         child: Icon(Icons.camera_alt_rounded),
       ),

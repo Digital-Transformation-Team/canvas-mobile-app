@@ -11,14 +11,7 @@ final GoRouter router = GoRouter(
   routes: [
     GoRoute(path: '/', redirect: (context, state) => "/courses"),
     GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
-    GoRoute(
-      path: '/courses/:courseId/tasks/:taskId/camera',
-      builder: (context, state) {
-        final courseId = state.pathParameters['courseId']!; // Получаем ID
-        final taskId = state.pathParameters['taskId']!; // Получаем ID
-        return CameraScreen(courseId: courseId, taskId: taskId);
-      },
-    ),
+    GoRoute(path: '/camera', builder: (context, state) => CameraScreen()),
     GoRoute(path: '/courses', builder: (context, state) => CoursesListScreen()),
     GoRoute(
       path: '/courses/:courseId',

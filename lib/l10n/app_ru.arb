@@ -26,5 +26,11 @@
   "students_attend": "Присутствует",
   "students_not_attend": "Отсутствует",
   "students_excuse": "Отсутствие по уважительной причине",
-  "students_send_attendance": "Отправить посещаемость"
+  "students_send_attendance": "Отправить посещаемость",
+
+  "camera_title": "Посящаемость",
+  "camera_hello": "Привет {studentName}",
+  "camera_student_not_found": "Студент не найден",
+  "camera_not_allowed": "\uD83D\uDEAB Камера не разрешена",
+  "camera_give_permission": "Дать доступ"
 }

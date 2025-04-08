@@ -26,5 +26,11 @@
   "students_attend": "Attend",
   "students_not_attend": "Not attend",
   "students_excuse": "Has reason to not attend",
-  "students_send_attendance": "Send attendance"
+  "students_send_attendance": "Send attendance",
+
+  "camera_title": "Attendance",
+  "camera_hello": "Hello {studentName}",
+  "camera_student_not_found": "Student not found",
+  "camera_not_allowed": "\uD83D\uDEAB Camera is not allowed",
+  "camera_give_permission": "Give permission"
 }

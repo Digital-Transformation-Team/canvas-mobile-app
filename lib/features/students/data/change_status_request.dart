@@ -24,7 +24,7 @@ Future<void> change_status(
   String value,
 ) async {
   try {
-    String url = '/api/attendances/v1/$asignment_web_id';
+    String url = '/api/attendances/v1/$asignment_web_id/mark';
     print(url);
     var options = await getTokenOptions();
     final response = await dio.put(
