@@ -5,10 +5,11 @@ import '../../../core/shared_prefs.dart';
 import '../../courses/data/get_courses_request.dart';
 import '../domain/students_class.dart';
 
-Future<List<Student>> get_students(String web_id) async {
+Future<List<Student>> get_students(String id, int page) async {
   try {
     var options = await getTokenOptions();
-    String url = '/api/attendances/v1/?assignment_web_id=$web_id';
+    String url = '/api/attendances/v1/?assignment_id=$id&order_by=created_date&asc=false&page=$page';
+    print(url);
     final response = await dio.get(
       url,
       options: options,

@@ -66,6 +66,10 @@ dependencies:
 
   http_parser: any
   http: any
+
+  # Paginator
+  infinite_scroll_pagination: ^5.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

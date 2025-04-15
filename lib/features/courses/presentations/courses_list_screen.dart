@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:narxoz_face_id/features/auth/data/login_request.dart';
 import 'package:narxoz_face_id/features/courses/domain/courses_class.dart';
 import 'package:narxoz_face_id/features/courses/presentations/widgets/course_card_widget.dart';
@@ -17,16 +18,40 @@ class CoursesListScreen extends StatefulWidget {
 }
 
 class _CoursesListScreenState extends State<CoursesListScreen> {
-  late Future<List<Course>> coursesFuture;
+  late PagingState<int, Course> _state = PagingState();
+
+  void _fetchNextPage() async {
+    if (_state.isLoading) return;
+
+    await Future.value();
+
+    setState(() {
+      _state = _state.copyWith(isLoading: true, error: null);
+    });
+
+    try {
+      final newKey = (_state.keys?.last ?? 0) + 1;
+      final newItems = await get_courses(newKey);
+      final isLastPage = newItems.isEmpty;
+
+      setState(() {
+        _state = _state.copyWith(
+          pages: [...?_state.pages, newItems],
+          keys: [...?_state.keys, newKey],
+          hasNextPage: !isLastPage,
+          isLoading: false,
+        );
+      });
+    } catch (error) {
+      setState(() {
+        _state = _state.copyWith(error: error, isLoading: false);
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    coursesFuture = initClasses();
-  }
-
-  Future<List<Course>> initClasses() async {
-    return await get_courses();
   }
 
   @override
@@ -58,43 +83,14 @@ class _CoursesListScreenState extends State<CoursesListScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.only(left: 10, right: 10),
-        child: Column(
-          children: [
-            ListTile(
-              onTap: () async {
-                setState(() {
-                  coursesFuture = get_courses();
-                });
-              },
-              title: Text(AppLocalizations.of(context)!.courses_more_button),
-              leading: Icon(Icons.cloud_download),
-            ),
-            FutureBuilder(
-              future: coursesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text(AppLocalizations.of(context)!.courses_loading_error));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text(AppLocalizations.of(context)!.courses_empty));
-                }
-
-                final classes = snapshot.data!;
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: classes.length,
-                  itemBuilder: (context, index) {
-                    return CourseCardWidget(
-                      course: classes[index],
-                      index: index,
-                    );
-                  },
-                );
-              },
-            ),
-          ],
+        child: PagedListView<int, Course>(
+          state: _state,
+          fetchNextPage: _fetchNextPage,
+          builderDelegate: PagedChildBuilderDelegate(
+            itemBuilder:
+                (context, item, index) =>
+                    CourseCardWidget(course: item, index: index),
+          ),
         ),
       ),
     );

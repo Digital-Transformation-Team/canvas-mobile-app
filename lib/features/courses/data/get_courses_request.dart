@@ -59,7 +59,7 @@ Future<Options> getTokenOptions() async {
 //   }
 // }
 
-Future<List<Course>> get_courses() async {
+Future<List<Course>> get_courses(page) async {
   try {
     var options = await getTokenOptions();
     var user = await get_user();
@@ -67,7 +67,7 @@ Future<List<Course>> get_courses() async {
       '/api/canvas-courses/v1/',
       queryParameters: {
         'canvas_user_id': user.id,
-        'page': 1,
+        'page': page,
         'per_page': 10,
         'order_by': 'id',
         'asc': true,
@@ -87,6 +87,6 @@ Future<List<Course>> get_courses() async {
     }
   } catch (e) {
     print("Ошибка: $e");
-    return [];
+    return throw Exception("Ошибка загрузки");
   }
 }

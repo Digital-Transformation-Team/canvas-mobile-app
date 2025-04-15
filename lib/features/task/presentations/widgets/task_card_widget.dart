@@ -17,7 +17,7 @@ class TaskCardWidget extends StatelessWidget {
         leading: Icon(Icons.task_alt, color: Colors.green),
         trailing: Icon(Icons.arrow_forward, color: Colors.grey),
         onTap: () {
-          context.push('/tasks/${task.web_id}');
+          context.push('/tasks/${task.id}/${task.web_id}');
         },
       ),
     );

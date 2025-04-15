@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:narxoz_face_id/features/auth/data/login_request.dart';
 import 'package:narxoz_face_id/features/students/presentations/widget/student_card_request.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -11,30 +12,83 @@ import '../data/get_students_request.dart';
 import '../domain/students_class.dart';
 
 class StudentsListScreen extends StatefulWidget {
+  final String id;
   final String web_id;
 
-  const StudentsListScreen({
-    super.key,
-    required this.web_id,
-  });
+  const StudentsListScreen({super.key, required this.web_id, required this.id});
 
   @override
   State<StudentsListScreen> createState() => _StudentsListScreenState();
 }
 
 class _StudentsListScreenState extends State<StudentsListScreen> {
-  late Future<List<Student>> studentsFuture;
+  late PagingState<int, Student> _state = PagingState();
   final TextEditingController selectedController = TextEditingController();
   String? selectedValue;
 
   @override
   void initState() {
     super.initState();
-    studentsFuture = initStudents();
   }
 
-  Future<List<Student>> initStudents() async {
-    return get_students(widget.web_id);
+  Future<void> _fetchFirstPage() async {
+    setState(() {
+      _state = _state.copyWith(pages: [], keys: []);
+    });
+
+    await Future.value();
+
+    setState(() {
+      _state = _state.copyWith(isLoading: true, error: null);
+    });
+
+    try {
+      final newItems = await get_students(widget.id, 1);
+      final isLastPage = newItems.isEmpty;
+
+      setState(() {
+        _state = _state.copyWith(
+          pages: [newItems],
+          keys: [1],
+          hasNextPage: !isLastPage,
+          isLoading: false,
+        );
+      });
+    } catch (error) {
+      setState(() {
+        _state = _state.copyWith(error: "Something wrong", isLoading: false);
+      });
+    }
+  }
+
+  void _fetchNextPage() async {
+    if (_state.isLoading) return;
+
+    await Future.value();
+
+    setState(() {
+      _state = _state.copyWith(isLoading: true, error: null);
+    });
+
+    try {
+      final newKey = (_state.keys?.last ?? 0) + 1;
+      print(newKey);
+      final newItems = await get_students(widget.id, newKey);
+      final isLastPage = newItems.isEmpty;
+
+      setState(() {
+        _state = _state.copyWith(
+          pages: [...?_state.pages, newItems],
+          keys: [...?_state.keys, newKey],
+          hasNextPage: !isLastPage,
+          isLoading: false,
+        );
+      });
+    } catch (error) {
+      setState(() {
+        _state = _state.copyWith(error: error, isLoading: false);
+      });
+    }
   }
 
   void showStudentModalBottomSheet(student, index) {
@@ -86,51 +140,6 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                       ),
                     ],
                   ),
-                  // DropdownMenu(
-                  //   initialSelection: student.value,
-                  //   controller: selectedController,
-                  //   onSelected: (value) {
-                  //     setState(() {
-                  //       selectedValue = value.toString();
-                  //     });
-                  //   },
-                  //   dropdownMenuEntries: [
-                  //     DropdownMenuEntry(
-                  //       value: "complete",
-                  //       label: AppLocalizations.of(context)!.students_attend,
-                  //       labelWidget: ListTile(
-                  //         title: Text(
-                  //           AppLocalizations.of(context)!.students_attend,
-                  //         ),
-                  //         leading: Icon(Icons.check, color: Colors.green),
-                  //       ),
-                  //     ),
-                  //     DropdownMenuEntry(
-                  //       value: "incomplete",
-                  //       label:
-                  //           AppLocalizations.of(context)!.students_not_attend,
-                  //       labelWidget: ListTile(
-                  //         title: Text(
-                  //           AppLocalizations.of(context)!.students_not_attend,
-                  //         ),
-                  //         leading: Icon(Icons.close, color: Colors.red),
-                  //       ),
-                  //     ),
-                  //     DropdownMenuEntry(
-                  //       value: "excuse",
-                  //       label: AppLocalizations.of(context)!.students_excuse,
-                  //       labelWidget: ListTile(
-                  //         title: Text(
-                  //           AppLocalizations.of(context)!.students_excuse,
-                  //         ),
-                  //         leading: Icon(
-                  //           Icons.sick_outlined,
-                  //           color: Colors.blue,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
               Padding(padding: EdgeInsets.only(bottom: 10)),
@@ -157,7 +166,7 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
 
   void onStatusChanged() {
     setState(() {
-      studentsFuture = initStudents();
+      _fetchFirstPage();
     });
   }
 
@@ -190,50 +199,23 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
       ),
       body: Padding(
         padding: EdgeInsets.only(left: 10, right: 10),
-        child: Column(
-          children: [
-            ListTile(
-              onTap: () async {
-                setState(() {
-                  studentsFuture = initStudents();
-                });
-              },
-              title: Text(AppLocalizations.of(context)!.students_reload_page),
-              leading: Icon(Icons.refresh),
-            ),
-            FutureBuilder(
-              future: studentsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      AppLocalizations.of(context)!.students_loading_error,
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Text(AppLocalizations.of(context)!.students_empty),
-                  );
-                }
-
-                final students = snapshot.data!;
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: students.length,
-                  itemBuilder: (context, index) {
-                    return StudentCardWidget(
-                      student: students[index],
+        child: Padding(
+          padding: EdgeInsets.only(left: 10, right: 10),
+          child: RefreshIndicator(
+            onRefresh: () => Future.sync(() => _fetchFirstPage()),
+            child: PagedListView<int, Student>(
+              state: _state,
+              fetchNextPage: _fetchNextPage,
+              builderDelegate: PagedChildBuilderDelegate(
+                itemBuilder:
+                    (context, item, index) => StudentCardWidget(
+                      student: item,
                       index: index,
                       showStudentModalBottomSheet: showStudentModalBottomSheet,
-                    );
-                  },
-                );
-              },
+                    ),
+              ),
             ),
-          ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

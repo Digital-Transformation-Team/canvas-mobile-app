@@ -6,7 +6,7 @@ class DioClient {
   static Dio createDio() {
     Dio dio = Dio(
       BaseOptions(
-        baseUrl: SERVER_IP,
+        baseUrl: SERVER_URL,
         headers: {
           'Content-Type': 'application/json',
         },

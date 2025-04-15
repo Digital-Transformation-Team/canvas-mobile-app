@@ -1,3 +1,17 @@
+String capitalize(String input) {
+  if (input.isEmpty) return input;
+
+  return input
+      .split(' ')
+      .map(
+        (word) =>
+            word.isNotEmpty
+                ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+                : '',
+      )
+      .join(' ');
+}
+
 class Student {
   late String id;
   late String web_id;
@@ -31,7 +45,7 @@ class Student {
   static Student fromJson(Map<String, dynamic> json) => Student(
     id: json['student']['id'].toString(),
     web_id: json['student']['web_id'].toString(),
-    name: json['student']['name'].toString(),
+    name: capitalize(json['student']['name'].toString()),
     email: json['student']['email'].toString(),
     status: json['status'].toString(),
     value: json['value'].toString(),

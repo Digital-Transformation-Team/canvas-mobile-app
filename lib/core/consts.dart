@@ -9,7 +9,7 @@ const AUTH_TIME = 24;
 
 const CURRENT_USER = 'currentUser';
 
-const SERVER_URL = 'http://records.narxoz.kz/';
+const SERVER_URL = 'https://staffapp.narxoz.kz/';
 const SERVER_IP = 'http://185.47.167.43/';
 
 final dio = DioClient.createDio();
