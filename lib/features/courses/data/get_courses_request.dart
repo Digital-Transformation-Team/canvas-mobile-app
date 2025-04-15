@@ -59,10 +59,16 @@ Future<Options> getTokenOptions() async {
 //   }
 // }
 
+void set_course_id(course_id) async {
+  print(course_id);
+  await sharedPrefs.set('course_id', course_id.toString());
+}
+
 Future<List<Course>> get_courses(page) async {
   try {
     var options = await getTokenOptions();
     var user = await get_user();
+    print(user.id);
     final response = await dio.get(
       '/api/canvas-courses/v1/',
       queryParameters: {

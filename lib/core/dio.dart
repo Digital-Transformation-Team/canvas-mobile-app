@@ -14,10 +14,10 @@ class DioClient {
     );
 
     // Allow HTTP requests and ignore SSL certificate errors (for development only)
-    (dio.httpClientAdapter as dynamic).onHttpClientCreate = (HttpClient client) {
-      client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-      return client;
-    };
+    // (dio.httpClientAdapter as dynamic).onHttpClientCreate = (HttpClient client) {
+    //   client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+    //   return client;
+    // };
 
     return dio;
   }

@@ -19,12 +19,12 @@ import '../../courses/data/get_courses_request.dart';
 // }
 
 Future<void> change_status(
-  String web_id,
-  String asignment_web_id,
+  String webId,
+  String asignmentWebId,
   String value,
 ) async {
   try {
-    String url = '/api/attendances/v1/$asignment_web_id/mark';
+    String url = '/api/attendances/v1/$asignmentWebId/mark';
     print(url);
     var options = await getTokenOptions();
     final response = await dio.put(

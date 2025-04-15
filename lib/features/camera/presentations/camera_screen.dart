@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/overlays/loading_overlay.dart';
-import '../../students/domain/students_class.dart';
 import '../data/send_image_request.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -105,12 +104,12 @@ class _CameraScreenState extends State<CameraScreen> {
         ),
         body:
             isCameraGranted
-                ? Container(
+                ? SizedBox(
                   width: size.width,
                   height: size.height,
                   child: FittedBox(
                     fit: BoxFit.cover,
-                    child: Container(
+                    child: SizedBox(
                       width: 100, // the actual width is not important here
                       child: CameraPreview(_controller!),
                     ),
@@ -137,13 +136,13 @@ class _CameraScreenState extends State<CameraScreen> {
         onPressed: () async {
           LoadingOverlay.show(context);
           final image = await _controller!.takePicture();
-          String? student_name = await sendImage(image);
+          String? studentName = await sendImage(image);
           LoadingOverlay.hide();
-          if (student_name != null) {
+          if (studentName != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  AppLocalizations.of(context)!.camera_hello(student_name),
+                  AppLocalizations.of(context)!.camera_hello(studentName),
                 ),
               ),
             );

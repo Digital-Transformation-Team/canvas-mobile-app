@@ -9,13 +9,15 @@ import '../../courses/data/get_courses_request.dart';
 
 Future<bool> isOK() async {
   String? courseId = await sharedPrefs.get('course_id');
-  String? assignment_id = await sharedPrefs.get('assignment_id');
-  return courseId != null && assignment_id != null;
+  String? assignmentId = await sharedPrefs.get('assignment_id');
+  return courseId != null && assignmentId != null;
 }
 
 Future<String?> sendImage(image) async {
   String? courseId = await sharedPrefs.get('course_id');
-  String? assignment_id = await sharedPrefs.get('assignment_id');
+  String? assignmentId = await sharedPrefs.get('assignment_id');
+  print("courseId: $courseId");
+  print("assignmentId: $assignmentId");
   try {
     Uint8List bytes = await image.readAsBytes();
     FormData formData = FormData.fromMap({
@@ -25,7 +27,7 @@ Future<String?> sendImage(image) async {
         contentType: MediaType('image', 'jpeg'),
       ),
       'course_id': int.parse(courseId!),
-      'assignment_id': int.parse(assignment_id!),
+      'assignment_id': int.parse(assignmentId!),
     });
 
     var tokens = await getTokens();

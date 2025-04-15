@@ -24,8 +24,8 @@ final GoRouter router = GoRouter(
       path: '/tasks/:id/:web_id',
       builder: (context, state) {
         final id = state.pathParameters['id']!; // Получаем ID
-        final web_id = state.pathParameters['web_id']!; // Получаем ID
-        return StudentsListScreen(id: id, web_id: web_id,);
+        final webId = state.pathParameters['web_id']!; // Получаем ID
+        return StudentsListScreen(id: id, web_id: webId,);
       },
     ),
   ],

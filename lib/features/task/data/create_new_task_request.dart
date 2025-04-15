@@ -7,8 +7,8 @@ import '../domain/tasks_class.dart';
 Future<Task> create_task(var courseId) async {
   try {
     var options = await getTokenOptions();
-    String? assignment_group_web_id = await sharedPrefs.get("assignment_group_web_id");
-    String url = '/api/canvas-courses/v1/$courseId/assignment-groups/$assignment_group_web_id/assignments';
+    String? assignmentGroupWebId = await sharedPrefs.get("assignment_group_web_id");
+    String url = '/api/canvas-courses/v1/$courseId/assignment-groups/$assignmentGroupWebId/assignments';
     print(url);
     final response = await dio.post(
       url,
