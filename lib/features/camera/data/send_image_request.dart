@@ -6,6 +6,7 @@ import 'package:narxoz_face_id/core/shared_prefs.dart';
 
 import '../../../core/consts.dart';
 import '../../courses/data/get_courses_request.dart';
+import '../../students/domain/students_class.dart';
 
 Future<bool> isOK() async {
   String? courseId = await sharedPrefs.get('course_id');
@@ -13,13 +14,13 @@ Future<bool> isOK() async {
   return courseId != null && assignmentId != null;
 }
 
-Future<String?> sendImage(image) async {
+Future<Student?> sendImage(bytes) async {
   String? courseId = await sharedPrefs.get('course_id');
   String? assignmentId = await sharedPrefs.get('assignment_id');
   print("courseId: $courseId");
   print("assignmentId: $assignmentId");
+
   try {
-    Uint8List bytes = await image.readAsBytes();
     FormData formData = FormData.fromMap({
       'file': MultipartFile.fromBytes(
         bytes as List<int>,
@@ -32,7 +33,7 @@ Future<String?> sendImage(image) async {
 
     var tokens = await getTokens();
     var response = await dio.put(
-      '/api/attendances/v1/mark/search',
+      '/api/attendances/v1/search',
       options: Options(
         headers: {'Cookie': tokens, 'Content-Type': 'multipart/form-data'},
       ),
@@ -41,12 +42,16 @@ Future<String?> sendImage(image) async {
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = response.data;
+      print(data);
 
-      return data["student"]["name"];
+      Student student = Student.fromJson(data);
+
+      return student;
     } else {
       throw Exception("Ошибка загрузки ${response.statusCode}");
     }
   } on DioException catch (e) {
+    print(e.message);
     if (e.response != null) {
       print("Has response");
       print(e.response.toString());

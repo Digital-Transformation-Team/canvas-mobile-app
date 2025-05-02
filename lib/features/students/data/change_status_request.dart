@@ -19,7 +19,6 @@ import '../../courses/data/get_courses_request.dart';
 // }
 
 Future<void> change_status(
-  String webId,
   String asignmentWebId,
   String value,
 ) async {

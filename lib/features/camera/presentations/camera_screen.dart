@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:go_router/go_router.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:narxoz_face_id/features/camera/presentations/widgets/FaceCamera.dart';
+import 'package:narxoz_face_id/features/students/data/change_status_request.dart';
+import 'package:narxoz_face_id/features/students/domain/students_class.dart';
 
 import '../../../core/overlays/loading_overlay.dart';
 import '../data/send_image_request.dart';
@@ -15,69 +18,33 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  CameraController? _controller;
+  late CameraController _controller;
   List<CameraDescription>? cameras;
-  int nextCamera = 1;
+  int nextCamera = 0;
   bool isCameraGranted = false;
+  bool _isDetecting = false;
+  bool _isDetectingFace = false;
+  Rect? _faceRect;
 
   @override
   void initState() {
     super.initState();
-    checkCameraPermission(); // Проверяем разрешение при запуске
+    fullCheck();
   }
 
-  Future<void> checkCameraPermission() async {
+  Future<void> fullCheck() async {
+    await checkDataIntegrity(); // Проверяем все данные
+  }
+
+  Future<void> checkDataIntegrity() async {
     var ok = await isOK();
     if (!ok) {
       context.go('/courses');
     }
-    var status = await Permission.camera.status;
-    if (status.isGranted) {
-      await initCamera();
-    }
-    setState(() {
-      isCameraGranted = status.isGranted;
-    });
-  }
-
-  Future<void> requestCameraPermission() async {
-    var status = await Permission.camera.request();
-    if (status.isGranted) {
-      await initCamera();
-    }
-    setState(() {
-      isCameraGranted = status.isGranted;
-    });
-  }
-
-  Future<void> initCamera() async {
-    cameras = await availableCameras();
-    _controller = CameraController(cameras![0], ResolutionPreset.medium);
-    await _controller!.initialize();
-    if (mounted) setState(() {});
-  }
-
-  Future<void> changeCamera() async {
-    cameras = await availableCameras();
-    _controller = CameraController(
-      cameras![nextCamera],
-      ResolutionPreset.medium,
-    );
-    await _controller!.initialize();
-    if (mounted) setState(() {});
-    nextCamera = nextCamera == 0 ? 1 : 0;
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -85,66 +52,35 @@ class _CameraScreenState extends State<CameraScreen> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white70,
       ),
-      body: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          leading: Container(
-            margin: EdgeInsets.all(8),
-            child: IconButton(
-              style: ButtonStyle(
-                backgroundColor: WidgetStatePropertyAll(Colors.white30),
-              ),
-              icon: Icon(Icons.cameraswitch),
-              onPressed: () async {
-                await changeCamera();
-              },
-            ),
-          ),
-        ),
-        body:
-            isCameraGranted
-                ? SizedBox(
-                  width: size.width,
-                  height: size.height,
-                  child: FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: 100, // the actual width is not important here
-                      child: CameraPreview(_controller!),
-                    ),
-                  ),
-                )
-                : Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppLocalizations.of(context)!.camera_not_allowed,
-                      style: TextStyle(fontSize: 18),
-                    ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: requestCameraPermission,
-                      child: Text(
-                        AppLocalizations.of(context)!.camera_give_permission,
-                      ),
-                    ),
-                  ],
-                ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+      body: FaceCamera(
+        cameraReverseButton: true,
+        onCapture: (bytes) async {
           LoadingOverlay.show(context);
-          final image = await _controller!.takePicture();
-          String? studentName = await sendImage(image);
-          LoadingOverlay.hide();
-          if (studentName != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  AppLocalizations.of(context)!.camera_hello(studentName),
-                ),
-              ),
+          Student? student = await sendImage(bytes);
+          if (student != null) {
+            showDialog<void>(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text(AppLocalizations.of(context)!.camera_right(student.name)),
+                  content: Image.memory(bytes),
+                  actions: [
+                    ElevatedButton(
+                      onPressed: () async {
+                        await change_status(
+                          student.web_id_assignment,
+                          "complete",
+                        );
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(AppLocalizations.of(context)!.yes_upper),
+                    ),
+                    ElevatedButton(onPressed: () {
+                      Navigator.of(context).pop();
+                    }, child: Text(AppLocalizations.of(context)!.no_upper)),
+                  ],
+                );
+              },
             );
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -155,10 +91,9 @@ class _CameraScreenState extends State<CameraScreen> {
               ),
             );
           }
+
+          LoadingOverlay.hide();
         },
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        child: Icon(Icons.camera),
       ),
     );
   }

@@ -32,5 +32,8 @@
   "camera_hello": "Hello {studentName}",
   "camera_student_not_found": "Student not found",
   "camera_not_allowed": "\uD83D\uDEAB Camera is not allowed",
-  "camera_give_permission": "Give permission"
+  "camera_give_permission": "Give permission",
+  "camera_right": "Is this student {studentName}?",
+  "yes_upper": "YES",
+  "no_upper": "NO"
 }

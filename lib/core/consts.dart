@@ -1,3 +1,5 @@
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
+
 import 'dio.dart';
 
 const CSRF_TOKEN = '_csrf_token';
@@ -13,4 +15,6 @@ const SERVER_URL = 'https://staffapp.narxoz.kz/';
 const SERVER_IP = 'http://185.47.167.43/';
 
 final dio = DioClient.createDio();
+final options = FaceDetectorOptions();
+final faceDetector = FaceDetector(options: options);
 

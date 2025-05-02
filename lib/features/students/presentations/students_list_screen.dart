@@ -147,9 +147,8 @@ class _StudentsListScreenState extends State<StudentsListScreen> {
                 onPressed: () async {
                   context.pop();
                   await change_status(
-                    widget.web_id,
                     student.web_id_assignment,
-                    selectedValue!,
+                    selectedValue!
                   );
                   onStatusChanged();
                 },
